@@ -54,7 +54,7 @@ const Contactus = () => {
                   href="#"
                   className="text-base font-medium text-gray-500 md:text-lg "
                 >
-                  abc@gmail.com
+                  help@tasksync.com
                 </a>
               </div>
             </div>

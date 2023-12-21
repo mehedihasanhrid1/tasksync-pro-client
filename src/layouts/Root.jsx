@@ -1,6 +1,7 @@
 import React from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 const Root = () => {
     const location = useLocation();
@@ -10,6 +11,7 @@ const Root = () => {
         <div>
             {noShared || <Navbar/>}
             <Outlet/>
+            {noShared || <Footer/>}
         </div>
     );
 };

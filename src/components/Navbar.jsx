@@ -124,7 +124,7 @@ const Navbar = () => {
                     </button>
                   </Link>
                   <Link to="/register">
-                    <button className="inline-block px-5 py-3 mr-2 font-semibold leading-none text-gray-100 bg-blue-500 hover:bg-blue-600 border border-gray-100 rounded">
+                    <button className="inline-block px-5 py-3 mr-2 font-semibold leading-none text-gray-100 bg-blue-600 hover:bg-blue-500 border border-gray-100 rounded">
                       Register
                     </button>
                   </Link>
@@ -183,7 +183,7 @@ const Navbar = () => {
                     logOut();
                     setOpen(false);
                   }}
-                  className="inline-block w-full px-5 py-3 mr-2 font-semibold leading-none text-center text-gray-100 rounded-full bg-blue-500 hover:bg-blue-600 border border-gray-100"
+                  className="inline-block w-full px-5 py-3 mr-2 font-semibold leading-none text-center text-gray-100 rounded-full bg-blue-600 hover:bg-blue-500 border border-gray-100"
                 >
                   Log Out
                 </button>
@@ -195,7 +195,7 @@ const Navbar = () => {
                 <Link to="/login">
                   <button
                     onClick={() => setOpen(false)}
-                    className="inline-block w-full px-5 py-3 mr-2 font-semibold leading-none text-center text-gray-100 bg-blue-500 hover:bg-blue-600 rounded-full"
+                    className="inline-block w-full px-5 py-3 mr-2 font-semibold leading-none text-center text-gray-100 bg-blue-600 hover:bg-blue-500 rounded-full"
                   >
                     Login
                   </button>
@@ -205,7 +205,7 @@ const Navbar = () => {
                 <Link to="/register">
                   <button
                     onClick={() => setOpen(false)}
-                    className="inline-block w-full px-5 py-3 mr-2 font-semibold leading-none text-center border rounded-full hover:text-white bg-blue-500 text-gray-100 hover:bg-blue-600 border-gray-100"
+                    className="inline-block w-full px-5 py-3 mr-2 font-semibold leading-none text-center border rounded-full hover:text-white bg-blue-600 text-gray-100 hover:bg-blue-500 border-gray-100"
                   >
                     Register
                   </button>

@@ -5,6 +5,8 @@ import Contactus from "../components/Contactus"
 import Home from "../pages/home/Home";
 import Register from "../pages/accounts/Register";
 import Login from "../pages/accounts/Login";
+import Dashboard from "../pages/dashboard/Dashboard";
+import PrivateRoute from "./PrivateRoute";
 
 const routers = createBrowserRouter(
     [
@@ -28,6 +30,10 @@ const routers = createBrowserRouter(
                 {
                     path:'/contactus',
                     element:<Contactus/>
+                },
+                {
+                    path:'/dashboard',
+                    element:<PrivateRoute><Dashboard/></PrivateRoute>
                 }
             ]
         }
