@@ -25,7 +25,7 @@ const Login = () => {
     const password = e.target.password.value;
     try {
       await signIn(email, password);
-      
+      navigate(location?.state ? location?.state : "/");
     } catch (error) {
       setLoginError("Invalid email or password");
       console.error("Sign-in failed:", error.message);

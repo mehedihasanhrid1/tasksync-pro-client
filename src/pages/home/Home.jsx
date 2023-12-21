@@ -1,4 +1,8 @@
 import React, { useEffect } from 'react';
+import Hero from './Hero';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+AOS.init();
 
 const Home = () => {
   useEffect(() => {
@@ -7,8 +11,8 @@ const Home = () => {
 
 
   return (
-    <div>
-      Hello
+    <div className='overflow-hidden'>
+      <Hero/>
     </div>
   );
 };

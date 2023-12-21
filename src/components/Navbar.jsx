@@ -153,7 +153,7 @@ const Navbar = () => {
             TaskSync<span className="text-blue-500">{" "}Pro</span>
             </Link>
             <button
-              className="p-2 text-gray-700 rounded-md hover:text-green-400 lg:hidden"
+              className="p-2 text-blue-500 rounded-md hover:text-blue-300 lg:hidden"
               onClick={() => setOpen(false)}
             >
               <svg
