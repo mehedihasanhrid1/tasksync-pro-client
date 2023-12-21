@@ -29,7 +29,7 @@ const AuthProvider = ({ children }) => {
       photoURL: photo,
     });
   };
-  
+
   const signIn = (email, password) => {
     setLoading(true);
     return signInWithEmailAndPassword(auth, email, password);
