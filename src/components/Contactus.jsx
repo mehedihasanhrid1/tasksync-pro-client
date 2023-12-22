@@ -184,7 +184,7 @@ const Contactus = () => {
                 type="message"
                 placeholder="Write a message..."
                 required=""
-                className="block w-full px-4 mb-4 rounded-md leading-tight text-gray-700 border bg-gray-50  py-7 "
+                className="block w-full px-4 mb-4 rounded-md leading-tight text-gray-700 border bg-gray-50 py-7"
               ></textarea>
               <button className="w-full py-4 mt-2 font-bold leading-normal text-white transition-all duration-300 bg-blue-600 rounded-md  hover:bg-blue-700">
                 Send Message

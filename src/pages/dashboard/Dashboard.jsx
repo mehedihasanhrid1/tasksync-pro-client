@@ -2,13 +2,46 @@ import React, { useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
+import { useForm } from "react-hook-form";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
 
 const Dashboard = () => {
   const { user, logOut } = useAuth();
   const [open, setOpen] = useState(true);
   const location = useLocation();
   const [droper, setDroper] = useState(false);
-  const [modal , openModal] = useState(false);
+  const [modal, openModal] = useState(false);
+  const { register, handleSubmit, reset } = useForm();
+
+  const onSubmit = async (data) => {
+    const task = {
+      title: data.title,
+      description: data.description,
+      deadline:data.deadline,
+      priority: data.priority,
+      name: user.displayName,
+      email: user.email,
+      type:"todo"
+    }
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/tasks",
+        task
+      );
+      if (response.data) {
+        openModal(false);
+        toast.success("Task added successfully!");
+        reset();
+      } else {
+        console.error("Failed to add task");
+      }
+    } catch (error) {
+      console.error("Error submitting the form:", error);
+    }
+  };
+
   return (
     <div className="relative">
       <div className="bg-[#f1f5fb] xl:h-screen">
@@ -85,13 +118,17 @@ const Dashboard = () => {
                   <li>
                     <div className="text-gray-800  px-6 py-3 w-full flex items-center hover:text-white hover:bg-gray-900">
                       <span className="inline-block mr-3 cursor-pointer">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                            fill="currentColor" className="w-5 h-5 group" viewBox="0 0 16 16">
-                                            <path
-                                                d="M2 2a2 2 0 0 0-2 2v8.01A2 2 0 0 0 2 14h5.5a.5.5 0 0 0 0-1H2a1 1 0 0 1-.966-.741l5.64-3.471L8 9.583l7-4.2V8.5a.5.5 0 0 0 1 0V4a2 2 0 0 0-2-2H2Zm3.708 6.208L1 11.105V5.383l4.708 2.825ZM1 4.217V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v.217l-7 4.2-7-4.2Z" />
-                                            <path
-                                                d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Zm-3.5-2a.5.5 0 0 0-.5.5v1h-1a.5.5 0 0 0 0 1h1v1a.5.5 0 0 0 1 0v-1h1a.5.5 0 0 0 0-1h-1v-1a.5.5 0 0 0-.5-.5Z" />
-                                        </svg>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          fill="currentColor"
+                          className="w-5 h-5 group"
+                          viewBox="0 0 16 16"
+                        >
+                          <path d="M2 2a2 2 0 0 0-2 2v8.01A2 2 0 0 0 2 14h5.5a.5.5 0 0 0 0-1H2a1 1 0 0 1-.966-.741l5.64-3.471L8 9.583l7-4.2V8.5a.5.5 0 0 0 1 0V4a2 2 0 0 0-2-2H2Zm3.708 6.208L1 11.105V5.383l4.708 2.825ZM1 4.217V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v.217l-7 4.2-7-4.2Z" />
+                          <path d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Zm-3.5-2a.5.5 0 0 0-.5.5v1h-1a.5.5 0 0 0 0 1h1v1a.5.5 0 0 0 1 0v-1h1a.5.5 0 0 0 0-1h-1v-1a.5.5 0 0 0-.5-.5Z" />
+                        </svg>
                       </span>
                       <span>Messages</span>
                     </div>
@@ -100,12 +137,17 @@ const Dashboard = () => {
                   <li>
                     <div className="text-gray-800  px-6 py-3 w-full flex items-center hover:text-white hover:bg-gray-900">
                       <span className="inline-block mr-3 cursor-pointer">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                            fill="currentColor" className="w-5 h-5" viewBox="0 0 16 16">
-                                            <path d="M4.502 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z" />
-                                            <path
-                                                d="M14.002 13a2 2 0 0 1-2 2h-10a2 2 0 0 1-2-2V5A2 2 0 0 1 2 3a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v8a2 2 0 0 1-1.998 2zM14 2H4a1 1 0 0 0-1 1h9.002a2 2 0 0 1 2 2v7A1 1 0 0 0 15 11V3a1 1 0 0 0-1-1zM2.002 4a1 1 0 0 0-1 1v8l2.646-2.354a.5.5 0 0 1 .63-.062l2.66 1.773 3.71-3.71a.5.5 0 0 1 .577-.094l1.777 1.947V5a1 1 0 0 0-1-1h-10z" />
-                                        </svg>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          fill="currentColor"
+                          className="w-5 h-5"
+                          viewBox="0 0 16 16"
+                        >
+                          <path d="M4.502 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z" />
+                          <path d="M14.002 13a2 2 0 0 1-2 2h-10a2 2 0 0 1-2-2V5A2 2 0 0 1 2 3a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v8a2 2 0 0 1-1.998 2zM14 2H4a1 1 0 0 0-1 1h9.002a2 2 0 0 1 2 2v7A1 1 0 0 0 15 11V3a1 1 0 0 0-1-1zM2.002 4a1 1 0 0 0-1 1v8l2.646-2.354a.5.5 0 0 1 .63-.062l2.66 1.773 3.71-3.71a.5.5 0 0 1 .577-.094l1.777 1.947V5a1 1 0 0 0-1-1h-10z" />
+                        </svg>
                       </span>
                       <span>Gallery</span>
                     </div>
@@ -114,48 +156,61 @@ const Dashboard = () => {
                   <li>
                     <div className="text-gray-800  px-6 py-3 w-full flex items-center hover:text-white hover:bg-gray-900">
                       <span className="inline-block mr-3 cursor-pointer">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                            fill="currentColor" className="w-5 h-5 group" viewBox="0 0 16 16">
-                                            <path
-                                                d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H2z" />
-                                            <path
-                                                d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5V4z" />
-                                        </svg>
-                                    </span>
-                                    <span> Calendar </span>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          fill="currentColor"
+                          className="w-5 h-5 group"
+                          viewBox="0 0 16 16"
+                        >
+                          <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H2z" />
+                          <path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5V4z" />
+                        </svg>
+                      </span>
+                      <span> Calendar </span>
                     </div>
                   </li>
 
                   <li>
                     <div className="text-gray-800  px-6 py-3 w-full flex items-center hover:text-white hover:bg-gray-900">
                       <span className="inline-block mr-3 cursor-pointer">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                            fill="currentColor" className="w-5 h-5" viewBox="0 0 16 16">
-                                            <path fillRule="evenodd"
-                                                d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" />
-                                        </svg>
-                                    </span>
-                                    <span> Category </span>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          fill="currentColor"
+                          className="w-5 h-5"
+                          viewBox="0 0 16 16"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"
+                          />
+                        </svg>
+                      </span>
+                      <span> Category </span>
                     </div>
                   </li>
 
                   <li>
                     <div className="text-gray-800  px-6 py-3 w-full flex items-center hover:text-white hover:bg-gray-900">
                       <span className="inline-block mr-3 cursor-pointer">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                            fill="currentColor"
-                                            className="w-5 h-5"
-                                            viewBox="0 0 16 16">
-                                            <path
-                                                d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                                            <path
-                                                d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
-                                        </svg>
-                                    </span>
-                                    <span> Help </span>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          fill="currentColor"
+                          className="w-5 h-5"
+                          viewBox="0 0 16 16"
+                        >
+                          <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                          <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
+                        </svg>
+                      </span>
+                      <span> Help </span>
                     </div>
                   </li>
-
                 </ul>
               </div>
             </nav>
@@ -351,20 +406,34 @@ const Dashboard = () => {
               <div className="">
                 <div className="mx-auto">
                   <div className="flex items-center justify-between mb-6">
-                  <h1 className="text-3xl font-bold text-gray-900">
-                    Dashboard
-                  </h1>
-                  <button onClick={()=>openModal(!modal)} className="py-3 px-5 font-semibold text-lg bg-blue-600 rounded-md text-white flex items-center justify-center"> <span className="text-xl mr-2"><FaPlus /></span> <span>Add a Task</span></button>
-
+                    <h1 className="text-3xl font-bold text-gray-900">
+                      Dashboard
+                    </h1>
+                    <button
+                      onClick={() => openModal(!modal)}
+                      className="py-3 px-5 font-semibold text-lg bg-blue-600 rounded-md text-white flex items-center justify-center"
+                    >
+                      {" "}
+                      <span className="text-xl mr-2">
+                        <FaPlus />
+                      </span>{" "}
+                      <span>Add a Task</span>
+                    </button>
                   </div>
                   <div className="grid grid-cols-1 gap-4 lg:gap-8 lg:grid-cols-3">
                     <div className="p-6 mb-6 bg-white rounded shadow card">
-                      <h2 className="mb-6 text-xl font-semibold text-gray-800"> To Do </h2>
+                      <h2 className="mb-6 text-xl font-semibold text-gray-800">
+                        {" "}
+                        To Do{" "}
+                      </h2>
                       {/* to do task */}
                     </div>
 
                     <div className="p-6 mb-6 bg-white rounded shadow card ">
-                      <h2 className="mb-6 text-xl font-semibold text-gray-800"> Ongoing </h2>
+                      <h2 className="mb-6 text-xl font-semibold text-gray-800">
+                        {" "}
+                        Ongoing{" "}
+                      </h2>
                       {/* ongoing task */}
                     </div>
 
@@ -381,41 +450,75 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-
       </div>
-        <div
-            className={`${modal ? " absolute h-screen top-0 left-0 flex items-center justify-center w-full z-50" : "hidden"}`}
-            style={{ backgroundColor: 'rgba(0,0,0,.6)' }}
-          >
-            <div
-              className="h-auto p-4 mx-2 text-left bg-white shadow-3xl rounded-3xl md:max-w-xl md:p-6 lg:p-8 md:mx-0"
+      <div
+        className={`${
+          modal
+            ? " absolute h-screen top-0 left-0 flex items-center justify-center w-full z-50"
+            : "hidden"
+        }`}
+        style={{ backgroundColor: "rgba(0,0,0,.6)" }}
+      >
+        <div className="h-auto p-4 mx-2 text-left bg-white shadow-3xl rounded-3xl md:max-w-xl md:p-6 lg:p-8 md:mx-0">
+          <div className="mb-4 text-center">
+            <h2 className="mb-4 text-2xl font-bold leading-snug text-gray-800">
+              Add a New Task
+            </h2>
+          </div>
+          <div>
+            <form
+              className="space-y-4 md:space-y-3 w-72 lg:w-96"
+              onSubmit={handleSubmit(onSubmit)}
             >
-              <div className="flex justify-center mb-4">
-                <span className="text-blue-500 dark:text-blue-400 dark:hover:text-blue-500 ">
-                  
-                </span>
-              </div>
-              <div className="mb-4 text-center">
-                <h2 className="mb-4 text-2xl font-bold leading-snug text-gray-800">
-                  Add a New Task
-                </h2>
-              </div>
-              <span className="justify-center block gap-3 shadow-sm md:flex">
+              <label
+                className="block mb-2  font-medium text-gray-900"
+                htmlFor="title"
+              >
+                Title:
+              </label>
+              <input
+                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                placeholder="Task Title"
+                type="text"
+                id="title"
+                {...register("title", { required: true })}
+              />
+
+              <label className="block mb-2  font-medium text-gray-900" htmlFor="description">Description:</label>
+              <textarea
+                id="description" placeholder="Task Description" className="bg-gray-50  border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  px-2 leading-tight  border py-2"
+                {...register("description", { required: true })}
+              />
+
+              <label className="block mb-2  font-medium text-gray-900" htmlFor="deadline">Deadline:</label>
+              <input className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  block w-full p-2.5" type="date" id="deadline" {...register("deadline")} />
+
+              <label className="block mb-2  font-medium text-gray-900" htmlFor="priority">Priority:</label>
+              <select className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" id="priority" {...register("priority")}>
+                <option value="Low">Low</option>
+                <option value="Moderate">Moderate</option>
+                <option value="High">High</option>
+              </select>
+
+              <span className="justify-center gap-3 lg:gap-4 flex shadow-sm items-center">
                 <button
                   onClick={() => openModal(false)}
-                  className="inline-block px-5 py-3 mr-4  font-semibold leading-none text-blue-500 border border-blue-500 rounded-lg hover:text-blue-700 hover:border-blue-700"
+                  className="inline-block px-5 py-3 mt-3 font-semibold leading-none text-blue-500 border border-blue-500 rounded-lg hover:text-blue-700 hover:border-blue-700"
                 >
                   Cancel
                 </button>
                 <button
-                  className="inline-block px-5 py-3 mr-2 font-semibold leading-none text-gray-100 bg-blue-600 hover:bg-blue-500 border border-gray-100 rounded-lg"
+                  type="submit"
+                  className="inline-block px-5 py-3 mt-3 font-semibold leading-none text-gray-100 bg-blue-600 hover:bg-blue-500 border border-gray-100 rounded-lg"
                 >
                   Cofirm
                 </button>
               </span>
-            </div>
+            </form>
           </div>
-
+        </div>
+      </div>
+      <ToastContainer position="top-center" autoClose={3000} />
     </div>
   );
 };
