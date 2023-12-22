@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import { Link, NavLink, useLocation } from "react-router-dom";
+import { FaPlus } from "react-icons/fa";
 
 const Dashboard = () => {
   const { user, logOut } = useAuth();
   const [open, setOpen] = useState(true);
   const location = useLocation();
   const [droper, setDroper] = useState(false);
+  const [modal , openModal] = useState(false);
   return (
-    <div>
+    <div className="relative">
       <div className="bg-[#f1f5fb] xl:h-screen">
         <div>
           <div className="relative lg:block">
@@ -348,24 +350,26 @@ const Dashboard = () => {
             <div className="p-4 lg:p-8">
               <div className="">
                 <div className="mx-auto">
-                  <h1 className="mb-5 text-2xl font-bold text-black">
-                    {" "}
-                    Dashboard{" "}
+                  <div className="flex items-center justify-between mb-6">
+                  <h1 className="text-3xl font-bold text-gray-900">
+                    Dashboard
                   </h1>
+                  <button onClick={()=>openModal(!modal)} className="py-3 px-5 font-semibold text-lg bg-blue-600 rounded-md text-white flex items-center justify-center"> <span className="text-xl mr-2"><FaPlus /></span> <span>Add a Task</span></button>
 
+                  </div>
                   <div className="grid grid-cols-1 gap-4 lg:gap-8 lg:grid-cols-3">
-                    <div className="p-6 mb-6 bg-white rounded shadow card ">
-                      <h2 className="mb-6 text-xl font-semibold"> To Do </h2>
+                    <div className="p-6 mb-6 bg-white rounded shadow card">
+                      <h2 className="mb-6 text-xl font-semibold text-gray-800"> To Do </h2>
                       {/* to do task */}
                     </div>
 
                     <div className="p-6 mb-6 bg-white rounded shadow card ">
-                      <h2 className="mb-6 text-xl font-semibold"> Ongoing </h2>
+                      <h2 className="mb-6 text-xl font-semibold text-gray-800"> Ongoing </h2>
                       {/* ongoing task */}
                     </div>
 
                     <div className="p-6 mb-6 bg-white rounded shadow card ">
-                      <h2 className="mb-6 text-xl font-semibold">
+                      <h2 className="mb-6 text-xl font-semibold text-gray-800">
                         {" "}
                         Completed{" "}
                       </h2>
@@ -377,7 +381,41 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
+
       </div>
+        <div
+            className={`${modal ? " absolute h-screen top-0 left-0 flex items-center justify-center w-full z-50" : "hidden"}`}
+            style={{ backgroundColor: 'rgba(0,0,0,.6)' }}
+          >
+            <div
+              className="h-auto p-4 mx-2 text-left bg-white shadow-3xl rounded-3xl md:max-w-xl md:p-6 lg:p-8 md:mx-0"
+            >
+              <div className="flex justify-center mb-4">
+                <span className="text-blue-500 dark:text-blue-400 dark:hover:text-blue-500 ">
+                  
+                </span>
+              </div>
+              <div className="mb-4 text-center">
+                <h2 className="mb-4 text-2xl font-bold leading-snug text-gray-800">
+                  Add a New Task
+                </h2>
+              </div>
+              <span className="justify-center block gap-3 shadow-sm md:flex">
+                <button
+                  onClick={() => openModal(false)}
+                  className="inline-block px-5 py-3 mr-4  font-semibold leading-none text-blue-500 border border-blue-500 rounded-lg hover:text-blue-700 hover:border-blue-700"
+                >
+                  Cancel
+                </button>
+                <button
+                  className="inline-block px-5 py-3 mr-2 font-semibold leading-none text-gray-100 bg-blue-600 hover:bg-blue-500 border border-gray-100 rounded-lg"
+                >
+                  Cofirm
+                </button>
+              </span>
+            </div>
+          </div>
+
     </div>
   );
 };

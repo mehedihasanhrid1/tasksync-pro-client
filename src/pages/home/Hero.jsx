@@ -26,7 +26,7 @@ const Hero = () => {
                                 Let's Explore</Link>
                         </div>
                         <div className="mt-4 sm:mt-0 sm:ml-3">
-                            <a href=""
+                            <a href="#"
                                 className="flex items-center justify-center w-full px-8 py-3 text-blue-600 bg-gray-100 rounded-md shadow hover:text-gray-100 hover:bg-blue-500 ">
                                 Learn More</a>
                         </div>
