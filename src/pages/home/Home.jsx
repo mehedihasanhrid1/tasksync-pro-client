@@ -4,6 +4,7 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 import About from './About';
 import Service from './Service';
+import User from './User';
 AOS.init();
 
 const Home = () => {
@@ -16,6 +17,7 @@ const Home = () => {
     <div className='overflow-hidden'>
       <Hero/>
       <Service/>
+      <User/>
       <About/>
     </div>
   );
