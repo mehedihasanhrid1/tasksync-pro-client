@@ -10,13 +10,13 @@ const Root = () => {
         window.scrollTo(0, 0);
       },[location.pathname]);
 
-  const noShared = location.pathname.includes('login') || location.pathname.includes('register');
-  const noFooter = location.pathname.includes('dashboard');
+  const noShared = location.pathname.includes('login') || location.pathname.includes('register') || location.pathname.includes('dashboard') ;
+
     return (
         <div>
             {noShared || <Navbar/>}
             <Outlet/>
-            {noShared || noFooter || <Footer/>}
+            {noShared || <Footer/>}
         </div>
     );
 };
