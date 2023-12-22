@@ -20,7 +20,7 @@ const Navbar = () => {
         Home
       </NavLink>
 
-      {user &&  (
+      {user && (
         <NavLink
           className={(navData) =>
             navData.isActive
@@ -32,6 +32,9 @@ const Navbar = () => {
           Dashboard
         </NavLink>
       )}
+
+      <NavLink className="hover:text-blue-600 text-gray-800">About Us</NavLink>
+
       <NavLink
         className={(navData) =>
           navData.isActive
@@ -53,7 +56,7 @@ const Navbar = () => {
             to="/"
             className="text-[26px] md:text-3xl font-semibold leading-none text-gray-800"
           >
-            TaskSync<span className="text-blue-500">{" "}Pro</span>
+            TaskSync<span className="text-blue-500"> Pro</span>
           </Link>
           <div className="flex justify-between items-center flex-row-reverse lg:flex-row lg:space-x-2">
             <div className="lg:hidden">
@@ -97,14 +100,13 @@ const Navbar = () => {
                   ""
                 )}
                 {user && (
-                      <img
-                        className="cursor-pointer object-cover rounded-full h-8 w-8 md:h-9 md:w-9 lg:h-10 lg:w-10"
-                        src={user.photoURL}
-                        alt={user.displayName}
-                      />
+                  <img
+                    className="cursor-pointer object-cover rounded-full h-8 w-8 md:h-9 md:w-9 lg:h-10 lg:w-10"
+                    src={user.photoURL}
+                    alt={user.displayName}
+                  />
                 )}
               </div>
-              
             </div>
             <div className="hidden lg:block">
               {user ? (
@@ -150,7 +152,7 @@ const Navbar = () => {
         >
           <div className="flex justify-between">
             <Link className="p-2 text-2xl font-bold" to="/">
-            TaskSync<span className="text-blue-500">{" "}Pro</span>
+              TaskSync<span className="text-blue-500"> Pro</span>
             </Link>
             <button
               className="p-2 text-blue-500 rounded-md hover:text-blue-300 lg:hidden"
