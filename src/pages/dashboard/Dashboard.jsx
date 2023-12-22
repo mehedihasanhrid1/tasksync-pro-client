@@ -10,7 +10,7 @@ import axios from "axios";
 import useTodo from "../../hooks/useTodo";
 import moment from "moment";
 import DraggableTask from "../dragdrop/Dragable";
-import { useDrop } from 'react-dnd';
+import { useDrop } from "react-dnd";
 
 const Dashboard = () => {
   const { user, logOut } = useAuth();
@@ -22,13 +22,13 @@ const Dashboard = () => {
   const [editTaskData, seteditTaskData] = useState({});
   const { register, handleSubmit, reset } = useForm();
 
-  const [toDo , loading , refetch] = useTodo();
+  const [toDo, loading, refetch] = useTodo();
 
   const [{ isOver }, drop] = useDrop({
-    accept: 'TASK',
+    accept: "TASK",
     drop: (item) => {
       const { task, onDragStart } = item;
-      updateTaskType(task._id, 'ongoing');
+      updateTaskType(task._id, "ongoing");
     },
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
@@ -37,9 +37,12 @@ const Dashboard = () => {
 
   const updateTaskType = async (taskId, newType) => {
     try {
-      const response = await axios.put(`http://localhost:5000/api/tasks/${taskId}`, {
-        type: newType,
-      });
+      const response = await axios.put(
+        `tasksync-pro-server.vercel.app/api/tasks/${taskId}`,
+        {
+          type: newType,
+        }
+      );
       if (response.data) {
         refetch();
         toast.success(`Task moved to ${newType} successfully!`);
@@ -47,24 +50,23 @@ const Dashboard = () => {
         console.error(`Failed to move task to ${newType}`);
       }
     } catch (error) {
-      console.error('Error updating task type:', error);
+      console.error("Error updating task type:", error);
     }
   };
-
 
   const onSubmit = async (data) => {
     const task = {
       title: data.title,
       description: data.description,
-      deadline:data.deadline,
+      deadline: data.deadline,
       priority: data.priority,
       name: user.displayName,
       email: user.email,
-      type:"todo"
-    }
+      type: "todo",
+    };
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/tasks",
+        "tasksync-pro-server.vercel.app/api/tasks",
         task
       );
       if (response.data) {
@@ -84,7 +86,8 @@ const Dashboard = () => {
   const handleDelete = async (id) => {
     try {
       const response = await axios.delete(
-        `http://localhost:5000/api/tasks/${id}`);  
+        `tasksync-pro-server.vercel.app/api/tasks/${id}`
+      );
       if (response.data) {
         refetch();
         toast.success("Task deleted successfully!");
@@ -99,43 +102,42 @@ const Dashboard = () => {
   const editTaskSubmit = (task) => {
     seteditTaskData(task);
     openTaskModal(!taskModal);
-  }
+  };
 
-  const editTask = async (e) =>{
+  const editTask = async (e) => {
     e.preventDefault();
     const title = e.target.title.value;
-    const  description = e.target.description.value;
+    const description = e.target.description.value;
     const deadline = e.target.deadline.value;
     const priority = e.target.priority.value;
 
     const id = editTaskData._id;
-    
+
     const task = {
       title: title,
       description: description,
-      deadline:deadline,
+      deadline: deadline,
       priority: priority,
-      type:"todo"
-    }
+      type: "todo",
+    };
 
     try {
-      
-      const response = await axios.put(`http://localhost:5000/api/tasks/${id}`, task);
+      const response = await axios.put(
+        `tasksync-pro-server.vercel.app/api/tasks/${id}`,
+        task
+      );
       if (response.data) {
         refetch();
         openTaskModal(false);
         toast.success("Task updated successfully!");
         seteditTaskData(response.data);
       } else {
-        console.error('Failed to update task');
+        console.error("Failed to update task");
       }
     } catch (error) {
-      console.error('Error updating task:', error);
+      console.error("Error updating task:", error);
     }
-
-
-
-  }
+  };
   return (
     <div className="relative">
       <div className="xl:h-screen">
@@ -521,74 +523,103 @@ const Dashboard = () => {
                         To Do{" "}
                       </h2>
                       <div>
-                        {
-                          toDo.length === 0 ? (<div className="bg-gray-200 p-3 rounded-md shadow-md text-lg font-semibold text-gray-800 text-center">Todo List is Empty!</div>) :
-                          (<div className="flex flex-col gap-3">
+                        {toDo.filter((data) => data.type === "todo").length ===
+                        0 ? (
+                          <div className="bg-gray-200 p-3 rounded-md shadow-md text-lg font-semibold text-gray-800 text-center">
+                            Todo List is Empty!
+                          </div>
+                        ) : (
+                          <div className="flex flex-col gap-3">
                             {toDo
-  .filter((data) => data.type === "todo") 
-  .map((filteredData) => (
-    <DraggableTask
-      key={filteredData._id}
-      data={filteredData}
-      onEdit={editTaskSubmit}
-      onDelete={handleDelete}
-    />
-  ))
-}
-                          </div>)
-                        }
-
-                        
-
-
+                              .filter((data) => data.type === "todo")
+                              .map((filteredData) => (
+                                <DraggableTask
+                                  key={filteredData._id}
+                                  data={filteredData}
+                                  onEdit={editTaskSubmit}
+                                  onDelete={handleDelete}
+                                />
+                              ))}
+                          </div>
+                        )}
                       </div>
-
-
                     </div>
 
-                    <div className="p-6 mb-6 bg-gray-100 rounded shadow card" ref={drop}>
+                    <div
+                      className="p-6 mb-6 bg-gray-100 rounded shadow card"
+                      ref={drop}
+                    >
                       <h2 className="mb-6 text-xl font-semibold text-gray-800">
                         {" "}
                         Ongoing{" "}
                       </h2>
                       <div>
-                        {
-                          toDo.length === 0 ? (<div className="bg-gray-200 p-3 rounded-md shadow-md text-lg font-semibold text-gray-800 text-center">Ongoing List is Empty!</div>) :
-                          (<div className="flex flex-col gap-3">
-                            {
-                              toDo.filter((data) => data.type === "ongoing").map((data) =>
-                              
-                              <div key={data._id} className="bg-gray-200 p-3 rounded-md shadow-md">
-                          <div className="flex items-center justify-between">
-                            <div>
-                            <h2 className="text-lg font-semibold text-gray-800">{data.title}</h2>
-                          <p className="text-sm font-light text-gray-600 mt-1">{data.description}</p>
-                          <div className="flex flex-col items-start gap-1 mt-3">
-                          {
-                            data.priority === "Low" && <button className="px-5 py-2 font-semibold rounded-lg bg-yellow-400 text-white">{data.priority}</button>
-                          }
-                          {
-                            data.priority === "Moderate" && <button className="px-5 py-2 font-semibold rounded-lg bg-purple-500 text-white">{data.priority}</button>
-                          }
-                          {
-                            data.priority === "High" && <button className="px-5 py-2 font-semibold rounded-lg bg-orange-500 text-white">{data.priority}</button>
-                          }
-                          <button className="py-2 font-medium text-sm rounded-lg text-green-600"><span className="text-base text-gray-800">Deadline:</span> {moment(data.deadline).format("DD MMMM YYYY")}</button>
+                        {toDo.filter((data) => data.type === "ongoing").length === 0 ? (
+                          <div className="bg-gray-200 p-3 rounded-md shadow-md text-lg font-semibold text-gray-800 text-center">
+                            Ongoing List is Empty!
                           </div>
-                            </div>
-                            <div className="flex flex-col items-center justify-center gap-2">
-                            <button onClick={()=> editTaskSubmit(data)} className="text-white p-3 bg-blue-600 text-xl rounded-lg"><FaRegEdit /></button>
-                            <button onClick={()=> handleDelete(data._id)} className="text-white p-3 bg-red-500 text-xl rounded-xl"><MdDelete /></button>
+                        ) : (
+                          <div className="flex flex-col gap-3">
+                            {toDo
+                              .filter((data) => data.type === "ongoing")
+                              .map((data) => (
+                                <div
+                                  key={data._id}
+                                  className="bg-gray-200 p-3 rounded-md shadow-md"
+                                >
+                                  <div className="flex items-center justify-between">
+                                    <div>
+                                      <h2 className="text-lg font-semibold text-gray-800">
+                                        {data.title}
+                                      </h2>
+                                      <p className="text-sm font-light text-gray-600 mt-1">
+                                        {data.description}
+                                      </p>
+                                      <div className="flex flex-col items-start gap-1 mt-3">
+                                        {data.priority === "Low" && (
+                                          <button className="px-5 py-2 font-semibold rounded-lg bg-yellow-400 text-white">
+                                            {data.priority}
+                                          </button>
+                                        )}
+                                        {data.priority === "Moderate" && (
+                                          <button className="px-5 py-2 font-semibold rounded-lg bg-purple-500 text-white">
+                                            {data.priority}
+                                          </button>
+                                        )}
+                                        {data.priority === "High" && (
+                                          <button className="px-5 py-2 font-semibold rounded-lg bg-orange-500 text-white">
+                                            {data.priority}
+                                          </button>
+                                        )}
+                                        <button className="py-2 font-medium text-sm rounded-lg text-green-600">
+                                          <span className="text-base text-gray-800">
+                                            Deadline:
+                                          </span>{" "}
+                                          {moment(data.deadline).format(
+                                            "DD MMMM YYYY"
+                                          )}
+                                        </button>
+                                      </div>
+                                    </div>
+                                    <div className="flex flex-col items-center justify-center gap-2">
+                                      <button
+                                        onClick={() => editTaskSubmit(data)}
+                                        className="text-white p-3 bg-blue-600 text-xl rounded-lg"
+                                      >
+                                        <FaRegEdit />
+                                      </button>
+                                      <button
+                                        onClick={() => handleDelete(data._id)}
+                                        className="text-white p-3 bg-red-500 text-xl rounded-xl"
+                                      >
+                                        <MdDelete />
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
                           </div>
-                          </div>
-                        </div>
-                              )
-                            }
-                          </div>)
-                        }
-
-      
-
+                        )}
                       </div>
                     </div>
 
@@ -597,7 +628,72 @@ const Dashboard = () => {
                         {" "}
                         Completed{" "}
                       </h2>
-                      {/* completed */}
+                      {toDo.filter((data) => data.type === "completed").length === 0 ? (
+                          <div className="bg-gray-200 p-3 rounded-md shadow-md text-lg font-semibold text-gray-800 text-center">
+                            Completed List is Empty!
+                          </div>
+                        ) : (
+                          <div className="flex flex-col gap-3">
+                            {toDo
+                              .filter((data) => data.type === "completed")
+                              .map((data) => (
+                                <div
+                                  key={data._id}
+                                  className="bg-gray-200 p-3 rounded-md shadow-md"
+                                >
+                                  <div className="flex items-center justify-between">
+                                    <div>
+                                      <h2 className="text-lg font-semibold text-gray-800">
+                                        {data.title}
+                                      </h2>
+                                      <p className="text-sm font-light text-gray-600 mt-1">
+                                        {data.description}
+                                      </p>
+                                      <div className="flex flex-col items-start gap-1 mt-3">
+                                        {data.priority === "Low" && (
+                                          <button className="px-5 py-2 font-semibold rounded-lg bg-yellow-400 text-white">
+                                            {data.priority}
+                                          </button>
+                                        )}
+                                        {data.priority === "Moderate" && (
+                                          <button className="px-5 py-2 font-semibold rounded-lg bg-purple-500 text-white">
+                                            {data.priority}
+                                          </button>
+                                        )}
+                                        {data.priority === "High" && (
+                                          <button className="px-5 py-2 font-semibold rounded-lg bg-orange-500 text-white">
+                                            {data.priority}
+                                          </button>
+                                        )}
+                                        <button className="py-2 font-medium text-sm rounded-lg text-green-600">
+                                          <span className="text-base text-gray-800">
+                                            Deadline:
+                                          </span>{" "}
+                                          {moment(data.deadline).format(
+                                            "DD MMMM YYYY"
+                                          )}
+                                        </button>
+                                      </div>
+                                    </div>
+                                    <div className="flex flex-col items-center justify-center gap-2">
+                                      <button
+                                        onClick={() => editTaskSubmit(data)}
+                                        className="text-white p-3 bg-blue-600 text-xl rounded-lg"
+                                      >
+                                        <FaRegEdit />
+                                      </button>
+                                      <button
+                                        onClick={() => handleDelete(data._id)}
+                                        className="text-white p-3 bg-red-500 text-xl rounded-xl"
+                                      >
+                                        <MdDelete />
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                          </div>
+                        )}
                     </div>
                   </div>
                 </div>
@@ -606,7 +702,6 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-
 
       <div
         className={`${
@@ -641,17 +736,43 @@ const Dashboard = () => {
                 {...register("title", { required: true })}
               />
 
-              <label className="block mb-2  font-medium text-gray-900" htmlFor="description">Description:</label>
+              <label
+                className="block mb-2  font-medium text-gray-900"
+                htmlFor="description"
+              >
+                Description:
+              </label>
               <textarea
-                id="description" placeholder="Task Description" className="bg-gray-50  border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  px-2 leading-tight  border py-2"
+                id="description"
+                placeholder="Task Description"
+                className="bg-gray-50  border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  px-2 leading-tight  border py-2"
                 {...register("description", { required: true })}
               />
 
-              <label className="block mb-2  font-medium text-gray-900" htmlFor="deadline">Deadline:</label>
-              <input className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  block w-full p-2.5" type="date" id="deadline" {...register("deadline")} />
+              <label
+                className="block mb-2  font-medium text-gray-900"
+                htmlFor="deadline"
+              >
+                Deadline:
+              </label>
+              <input
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  block w-full p-2.5"
+                type="date"
+                id="deadline"
+                {...register("deadline")}
+              />
 
-              <label className="block mb-2  font-medium text-gray-900" htmlFor="priority">Priority:</label>
-              <select className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" id="priority" {...register("priority")}>
+              <label
+                className="block mb-2  font-medium text-gray-900"
+                htmlFor="priority"
+              >
+                Priority:
+              </label>
+              <select
+                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                id="priority"
+                {...register("priority")}
+              >
                 <option value="Low">Low</option>
                 <option value="Moderate">Moderate</option>
                 <option value="High">High</option>
@@ -711,28 +832,66 @@ const Dashboard = () => {
                 required
               />
 
-              <label className="block mb-2  font-medium text-gray-900" htmlFor="description">Description:</label>
+              <label
+                className="block mb-2  font-medium text-gray-900"
+                htmlFor="description"
+              >
+                Description:
+              </label>
               <textarea
-                id="description" placeholder="Task Description" className="bg-gray-50  border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  px-2 leading-tight  border py-2"
+                id="description"
+                placeholder="Task Description"
+                className="bg-gray-50  border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  px-2 leading-tight  border py-2"
                 name="description"
                 defaultValue={editTaskData.description}
                 required
               />
 
-              <label className="block mb-2  font-medium text-gray-900" htmlFor="deadline">Deadline:</label>
-              <input className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  block w-full p-2.5" type="date" id="deadline" name="deadline" defaultValue={editTaskData.deadline} required />
+              <label
+                className="block mb-2  font-medium text-gray-900"
+                htmlFor="deadline"
+              >
+                Deadline:
+              </label>
+              <input
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  block w-full p-2.5"
+                type="date"
+                id="deadline"
+                name="deadline"
+                defaultValue={editTaskData.deadline}
+                required
+              />
 
-              <label className="block mb-2  font-medium text-gray-900" htmlFor="priority">Priority:</label>
-              <select className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" id="priority" name="priority" required>
-              <option defaultValue={editTaskData.priority}>{editTaskData.priority}</option>
-                {editTaskData.priority !== "Low" && <option value="Low">Low</option>}
-                {editTaskData.priority !== "Moderate" && <option value="Moderate">Moderate</option>}
-                {editTaskData.priority !== "High" && <option value="High">High</option>}
+              <label
+                className="block mb-2  font-medium text-gray-900"
+                htmlFor="priority"
+              >
+                Priority:
+              </label>
+              <select
+                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                id="priority"
+                name="priority"
+                required
+              >
+                <option defaultValue={editTaskData.priority}>
+                  {editTaskData.priority}
+                </option>
+                {editTaskData.priority !== "Low" && (
+                  <option value="Low">Low</option>
+                )}
+                {editTaskData.priority !== "Moderate" && (
+                  <option value="Moderate">Moderate</option>
+                )}
+                {editTaskData.priority !== "High" && (
+                  <option value="High">High</option>
+                )}
               </select>
 
               <span className="justify-center gap-3 lg:gap-4 flex shadow-sm items-center">
-                <button type="button"
-                  onClick={() =>{
+                <button
+                  type="button"
+                  onClick={() => {
                     seteditTaskData({});
                     openTaskModal(!taskModal);
                   }}
@@ -751,7 +910,6 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-
 
       <ToastContainer position="top-center" autoClose={3000} />
     </div>
