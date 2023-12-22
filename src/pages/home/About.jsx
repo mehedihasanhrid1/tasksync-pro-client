@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const About = () => {
   return (
-    <section className="flex items-center py-10 bg-stone-100">
+    <section data-aos="flip-down" className="flex items-center py-10 bg-stone-100">
       <div className="justify-center flex-1 max-w-6xl py-4 mx-auto lg:py-6 md:px-6">
         <div className="flex flex-wrap">
           <div className="w-full px-4 mb-10 lg:w-1/2 lg:mb-0">

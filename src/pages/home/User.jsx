@@ -3,7 +3,7 @@ import { FaStar } from 'react-icons/fa6';
 
 const User = () => {
     return (
-        <div>
+        <div data-aos="fade-right">
             <section className="flex items-center">
                 <div className="p-4 mx-auto max-w-7xl">
                     <div className="text-center mb-14">

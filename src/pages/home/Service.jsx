@@ -7,7 +7,7 @@ import { PiStudent } from "react-icons/pi";
 
 const Service = () => {
   return (
-    <section className="pt-8 md:pt-12 pb-6">
+    <section data-aos="fade-left" className="pt-8 md:pt-12 pb-6">
       <div className="container mx-auto">
         <div className="flex flex-wrap mb-2 lg:mb-0">
           <div className="w-full px-4">
