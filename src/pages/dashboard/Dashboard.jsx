@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import useAuth from "../../hooks/useAuth";
-import { Link } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 
 const Dashboard = () => {
   const { user, logOut } = useAuth();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
+  const location = useLocation();
   const [droper, setDroper] = useState(false);
   return (
     <div>
@@ -27,7 +28,7 @@ const Dashboard = () => {
                 <div className="flex flex-col gap-3 items-center justify-center border-b border-gray-200">
                   <img
                     src={user?.photoURL}
-                    className="lg:h-28 lg:w-28 md:h-20 md:w-20 h-16 w-16 rounded-full"
+                    className="lg:h-28 lg:w-28 md:h-20 md:w-20 h-16 w-16 object-cover rounded-full"
                     alt=""
                   />
                   <h3 className="font-semibold text-xl text-gray-800 mb-4">
@@ -36,9 +37,13 @@ const Dashboard = () => {
                 </div>
                 <ul className="mb-8 text-sm lg:text-base">
                   <li>
-                    <a
-                      href="#"
-                      className="flex items-center px-6 py-4 text-gray-800 group hover:text-white hover:bg-gray-900"
+                    <NavLink
+                      className={(navData) =>
+                        navData.isActive ||
+                        location.pathname.includes("/dashboard")
+                          ? "bg-blue-700 text-white px-6 py-3 w-full flex items-center"
+                          : "text-gray-800 group hover:text-white hover:bg-gray-900"
+                      }
                     >
                       <span className="inline-block mr-3">
                         <svg
@@ -55,8 +60,100 @@ const Dashboard = () => {
                         </svg>
                       </span>
                       <span>Dashboard</span>
-                    </a>
+                    </NavLink>
                   </li>
+                  <li>
+                    <div className="text-gray-800  px-6 py-3 w-full flex items-center hover:text-white hover:bg-gray-900">
+                      <span className="inline-block mr-3 cursor-pointer">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          fill="currentColor"
+                          className="w-5 h-5 group"
+                          viewBox="0 0 16 16"
+                        >
+                          <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2z"></path>
+                        </svg>
+                      </span>
+                      <span>Profile</span>
+                    </div>
+                  </li>
+
+                  <li>
+                    <div className="text-gray-800  px-6 py-3 w-full flex items-center hover:text-white hover:bg-gray-900">
+                      <span className="inline-block mr-3 cursor-pointer">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" className="w-5 h-5 group" viewBox="0 0 16 16">
+                                            <path
+                                                d="M2 2a2 2 0 0 0-2 2v8.01A2 2 0 0 0 2 14h5.5a.5.5 0 0 0 0-1H2a1 1 0 0 1-.966-.741l5.64-3.471L8 9.583l7-4.2V8.5a.5.5 0 0 0 1 0V4a2 2 0 0 0-2-2H2Zm3.708 6.208L1 11.105V5.383l4.708 2.825ZM1 4.217V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v.217l-7 4.2-7-4.2Z" />
+                                            <path
+                                                d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Zm-3.5-2a.5.5 0 0 0-.5.5v1h-1a.5.5 0 0 0 0 1h1v1a.5.5 0 0 0 1 0v-1h1a.5.5 0 0 0 0-1h-1v-1a.5.5 0 0 0-.5-.5Z" />
+                                        </svg>
+                      </span>
+                      <span>Messages</span>
+                    </div>
+                  </li>
+
+                  <li>
+                    <div className="text-gray-800  px-6 py-3 w-full flex items-center hover:text-white hover:bg-gray-900">
+                      <span className="inline-block mr-3 cursor-pointer">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" className="w-5 h-5" viewBox="0 0 16 16">
+                                            <path d="M4.502 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z" />
+                                            <path
+                                                d="M14.002 13a2 2 0 0 1-2 2h-10a2 2 0 0 1-2-2V5A2 2 0 0 1 2 3a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v8a2 2 0 0 1-1.998 2zM14 2H4a1 1 0 0 0-1 1h9.002a2 2 0 0 1 2 2v7A1 1 0 0 0 15 11V3a1 1 0 0 0-1-1zM2.002 4a1 1 0 0 0-1 1v8l2.646-2.354a.5.5 0 0 1 .63-.062l2.66 1.773 3.71-3.71a.5.5 0 0 1 .577-.094l1.777 1.947V5a1 1 0 0 0-1-1h-10z" />
+                                        </svg>
+                      </span>
+                      <span>Gallery</span>
+                    </div>
+                  </li>
+
+                  <li>
+                    <div className="text-gray-800  px-6 py-3 w-full flex items-center hover:text-white hover:bg-gray-900">
+                      <span className="inline-block mr-3 cursor-pointer">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" className="w-5 h-5 group" viewBox="0 0 16 16">
+                                            <path
+                                                d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H2z" />
+                                            <path
+                                                d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5V4z" />
+                                        </svg>
+                                    </span>
+                                    <span> Calendar </span>
+                    </div>
+                  </li>
+
+                  <li>
+                    <div className="text-gray-800  px-6 py-3 w-full flex items-center hover:text-white hover:bg-gray-900">
+                      <span className="inline-block mr-3 cursor-pointer">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" className="w-5 h-5" viewBox="0 0 16 16">
+                                            <path fillRule="evenodd"
+                                                d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" />
+                                        </svg>
+                                    </span>
+                                    <span> Category </span>
+                    </div>
+                  </li>
+
+                  <li>
+                    <div className="text-gray-800  px-6 py-3 w-full flex items-center hover:text-white hover:bg-gray-900">
+                      <span className="inline-block mr-3 cursor-pointer">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor"
+                                            className="w-5 h-5"
+                                            viewBox="0 0 16 16">
+                                            <path
+                                                d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                                            <path
+                                                d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533L8.93 6.588zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" />
+                                        </svg>
+                                    </span>
+                                    <span> Help </span>
+                    </div>
+                  </li>
+
                 </ul>
               </div>
             </nav>
@@ -147,7 +244,7 @@ const Dashboard = () => {
                           <div className="mr-2">
                             <img
                               src={user.photoURL}
-                              className="object-cover object-right w-10 h-10 rounded-full"
+                              className="object-cover w-10 h-10 rounded-full"
                               alt=""
                             />
                           </div>
@@ -180,22 +277,20 @@ const Dashboard = () => {
                         }`}
                       >
                         <div className="py-1">
-                          <Link
-                            to="/"
-                          >
+                          <Link to="/">
                             <div className="flex px-4 py-2 cursor-pointer text-sm text-gray-700 hover:bg-gray-100">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="16"
-                              height="16"
-                              fill="currentColor"
-                              class="w-5 h-5 group-"
-                              viewBox="0 0 16 16"
-                            >
-                              <path d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z" />
-                              <path d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5L9.5 0zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z" />
-                            </svg>
-                            <span className="ml-2">Home</span>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="16"
+                                height="16"
+                                fill="currentColor"
+                                className="w-5 h-5 group"
+                                viewBox="0 0 16 16"
+                              >
+                                <path d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z" />
+                                <path d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5L9.5 0zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z" />
+                              </svg>
+                              <span className="ml-2">Home</span>
                             </div>
                           </Link>
                           <a
@@ -265,16 +360,16 @@ const Dashboard = () => {
                     </div>
 
                     <div className="p-6 mb-6 bg-white rounded shadow card ">
-                      <h2 className="mb-6 text-xl font-semibold">
-                        {" "}
-                        Ongoing{" "}
-                      </h2>
-                     {/* ongoing task */}
+                      <h2 className="mb-6 text-xl font-semibold"> Ongoing </h2>
+                      {/* ongoing task */}
                     </div>
 
                     <div className="p-6 mb-6 bg-white rounded shadow card ">
-                      <h2 className="mb-6 text-xl font-semibold"> Completed </h2>
-                     {/* completed */}
+                      <h2 className="mb-6 text-xl font-semibold">
+                        {" "}
+                        Completed{" "}
+                      </h2>
+                      {/* completed */}
                     </div>
                   </div>
                 </div>
