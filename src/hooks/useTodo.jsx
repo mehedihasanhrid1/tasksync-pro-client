@@ -8,7 +8,7 @@ const useTodo = () => {
     const {data: toDo = [], isPending: loading, refetch} = useQuery({
         queryKey: ['toDo'], 
         queryFn: async() =>{
-            const res = await axios.get(`http://localhost:5000/api/tasks?userEmail=${user.email}&type=todo`);
+            const res = await axios.get(`http://localhost:5000/api/tasks?userEmail=${user.email}`);
             return res.data;
         }
     })

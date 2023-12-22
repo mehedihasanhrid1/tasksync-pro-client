@@ -9,6 +9,8 @@ import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import useTodo from "../../hooks/useTodo";
 import moment from "moment";
+import DraggableTask from "../dragdrop/Dragable";
+import { useDrop } from 'react-dnd';
 
 const Dashboard = () => {
   const { user, logOut } = useAuth();
@@ -21,6 +23,34 @@ const Dashboard = () => {
   const { register, handleSubmit, reset } = useForm();
 
   const [toDo , loading , refetch] = useTodo();
+
+  const [{ isOver }, drop] = useDrop({
+    accept: 'TASK',
+    drop: (item) => {
+      const { task, onDragStart } = item;
+      updateTaskType(task._id, 'ongoing');
+    },
+    collect: (monitor) => ({
+      isOver: !!monitor.isOver(),
+    }),
+  });
+
+  const updateTaskType = async (taskId, newType) => {
+    try {
+      const response = await axios.put(`http://localhost:5000/api/tasks/${taskId}`, {
+        type: newType,
+      });
+      if (response.data) {
+        refetch();
+        toast.success(`Task moved to ${newType} successfully!`);
+      } else {
+        console.error(`Failed to move task to ${newType}`);
+      }
+    } catch (error) {
+      console.error('Error updating task type:', error);
+    }
+  };
+
 
   const onSubmit = async (data) => {
     const task = {
@@ -494,8 +524,40 @@ const Dashboard = () => {
                         {
                           toDo.length === 0 ? (<div className="bg-gray-200 p-3 rounded-md shadow-md text-lg font-semibold text-gray-800 text-center">Todo List is Empty!</div>) :
                           (<div className="flex flex-col gap-3">
+                            {toDo
+  .filter((data) => data.type === "todo") 
+  .map((filteredData) => (
+    <DraggableTask
+      key={filteredData._id}
+      data={filteredData}
+      onEdit={editTaskSubmit}
+      onDelete={handleDelete}
+    />
+  ))
+}
+                          </div>)
+                        }
+
+                        
+
+
+                      </div>
+
+
+                    </div>
+
+                    <div className="p-6 mb-6 bg-gray-100 rounded shadow card" ref={drop}>
+                      <h2 className="mb-6 text-xl font-semibold text-gray-800">
+                        {" "}
+                        Ongoing{" "}
+                      </h2>
+                      <div>
+                        {
+                          toDo.length === 0 ? (<div className="bg-gray-200 p-3 rounded-md shadow-md text-lg font-semibold text-gray-800 text-center">Ongoing List is Empty!</div>) :
+                          (<div className="flex flex-col gap-3">
                             {
-                              toDo.map((data) =>
+                              toDo.filter((data) => data.type === "ongoing").map((data) =>
+                              
                               <div key={data._id} className="bg-gray-200 p-3 rounded-md shadow-md">
                           <div className="flex items-center justify-between">
                             <div>
@@ -525,18 +587,9 @@ const Dashboard = () => {
                           </div>)
                         }
 
-                        
-
+      
 
                       </div>
-                    </div>
-
-                    <div className="p-6 mb-6 bg-gray-100 rounded shadow card ">
-                      <h2 className="mb-6 text-xl font-semibold text-gray-800">
-                        {" "}
-                        Ongoing{" "}
-                      </h2>
-                      {/* ongoing task */}
                     </div>
 
                     <div className="p-6 mb-6 bg-gray-100 rounded shadow card ">
