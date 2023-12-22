@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import { Link, NavLink, useLocation } from "react-router-dom";
-import { FaPlus } from "react-icons/fa";
+import { FaPlus, FaRegEdit } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
 import { useForm } from "react-hook-form";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
+import useTodo from "../../hooks/useTodo";
+import moment from "moment";
 
 const Dashboard = () => {
   const { user, logOut } = useAuth();
@@ -13,7 +16,11 @@ const Dashboard = () => {
   const location = useLocation();
   const [droper, setDroper] = useState(false);
   const [modal, openModal] = useState(false);
+  const [taskModal, openTaskModal] = useState(false);
+  const [editTaskData, seteditTaskData] = useState({});
   const { register, handleSubmit, reset } = useForm();
+
+  const [toDo , loading , refetch] = useTodo();
 
   const onSubmit = async (data) => {
     const task = {
@@ -31,10 +38,12 @@ const Dashboard = () => {
         task
       );
       if (response.data) {
+        refetch();
         openModal(false);
         toast.success("Task added successfully!");
         reset();
       } else {
+        toast.error("Faild to add a task!");
         console.error("Failed to add task");
       }
     } catch (error) {
@@ -42,9 +51,64 @@ const Dashboard = () => {
     }
   };
 
+  const handleDelete = async (id) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:5000/api/tasks/${id}`);  
+      if (response.data) {
+        refetch();
+        toast.success("Task deleted successfully!");
+      } else {
+        console.error("Failed to delete task");
+      }
+    } catch (error) {
+      console.error("Error deleting task:", error);
+    }
+  };
+
+  const editTaskSubmit = (task) => {
+    seteditTaskData(task);
+    openTaskModal(!taskModal);
+  }
+
+  const editTask = async (e) =>{
+    e.preventDefault();
+    const title = e.target.title.value;
+    const  description = e.target.description.value;
+    const deadline = e.target.deadline.value;
+    const priority = e.target.priority.value;
+
+    const id = editTaskData._id;
+    
+    const task = {
+      title: title,
+      description: description,
+      deadline:deadline,
+      priority: priority,
+      type:"todo"
+    }
+
+    try {
+      
+      const response = await axios.put(`http://localhost:5000/api/tasks/${id}`, task);
+      if (response.data) {
+        refetch();
+        openTaskModal(false);
+        toast.success("Task updated successfully!");
+        seteditTaskData(response.data);
+      } else {
+        console.error('Failed to update task');
+      }
+    } catch (error) {
+      console.error('Error updating task:', error);
+    }
+
+
+
+  }
   return (
     <div className="relative">
-      <div className="bg-[#f1f5fb] xl:h-screen">
+      <div className="xl:h-screen">
         <div>
           <div className="relative lg:block">
             <nav
@@ -421,15 +485,53 @@ const Dashboard = () => {
                     </button>
                   </div>
                   <div className="grid grid-cols-1 gap-4 lg:gap-8 lg:grid-cols-3">
-                    <div className="p-6 mb-6 bg-white rounded shadow card">
+                    <div className="p-6 mb-6 bg-gray-100 rounded shadow card">
                       <h2 className="mb-6 text-xl font-semibold text-gray-800">
                         {" "}
                         To Do{" "}
                       </h2>
-                      {/* to do task */}
+                      <div>
+                        {
+                          toDo.length === 0 ? (<div className="bg-gray-200 p-3 rounded-md shadow-md text-lg font-semibold text-gray-800 text-center">Todo List is Empty!</div>) :
+                          (<div className="flex flex-col gap-3">
+                            {
+                              toDo.map((data) =>
+                              <div key={data._id} className="bg-gray-200 p-3 rounded-md shadow-md">
+                          <div className="flex items-center justify-between">
+                            <div>
+                            <h2 className="text-lg font-semibold text-gray-800">{data.title}</h2>
+                          <p className="text-sm font-light text-gray-600 mt-1">{data.description}</p>
+                          <div className="flex flex-col items-start gap-1 mt-3">
+                          {
+                            data.priority === "Low" && <button className="px-5 py-2 font-semibold rounded-lg bg-yellow-400 text-white">{data.priority}</button>
+                          }
+                          {
+                            data.priority === "Moderate" && <button className="px-5 py-2 font-semibold rounded-lg bg-purple-500 text-white">{data.priority}</button>
+                          }
+                          {
+                            data.priority === "High" && <button className="px-5 py-2 font-semibold rounded-lg bg-orange-500 text-white">{data.priority}</button>
+                          }
+                          <button className="py-2 font-medium text-sm rounded-lg text-green-600"><span className="text-base text-gray-800">Deadline:</span> {moment(data.deadline).format("DD MMMM YYYY")}</button>
+                          </div>
+                            </div>
+                            <div className="flex flex-col items-center justify-center gap-2">
+                            <button onClick={()=> editTaskSubmit(data)} className="text-white p-3 bg-blue-600 text-xl rounded-lg"><FaRegEdit /></button>
+                            <button onClick={()=> handleDelete(data._id)} className="text-white p-3 bg-red-500 text-xl rounded-xl"><MdDelete /></button>
+                          </div>
+                          </div>
+                        </div>
+                              )
+                            }
+                          </div>)
+                        }
+
+                        
+
+
+                      </div>
                     </div>
 
-                    <div className="p-6 mb-6 bg-white rounded shadow card ">
+                    <div className="p-6 mb-6 bg-gray-100 rounded shadow card ">
                       <h2 className="mb-6 text-xl font-semibold text-gray-800">
                         {" "}
                         Ongoing{" "}
@@ -437,7 +539,7 @@ const Dashboard = () => {
                       {/* ongoing task */}
                     </div>
 
-                    <div className="p-6 mb-6 bg-white rounded shadow card ">
+                    <div className="p-6 mb-6 bg-gray-100 rounded shadow card ">
                       <h2 className="mb-6 text-xl font-semibold text-gray-800">
                         {" "}
                         Completed{" "}
@@ -451,6 +553,8 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
+
+
       <div
         className={`${
           modal
@@ -518,6 +622,84 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
+
+      <div
+        className={`${
+          taskModal
+            ? " absolute h-screen top-0 left-0 flex items-center justify-center w-full z-50"
+            : "hidden"
+        }`}
+        style={{ backgroundColor: "rgba(0,0,0,.6)" }}
+      >
+        <div className="h-auto p-4 mx-2 text-left bg-white shadow-3xl rounded-3xl md:max-w-xl md:p-6 lg:p-8 md:mx-0">
+          <div className="mb-4 text-center">
+            <h2 className="mb-4 text-2xl font-bold leading-snug text-gray-800">
+              Edit a Task
+            </h2>
+          </div>
+          <div>
+            <form
+              className="space-y-4 md:space-y-3 w-72 lg:w-96"
+              onSubmit={editTask}
+            >
+              <label
+                className="block mb-2  font-medium text-gray-900"
+                htmlFor="title"
+              >
+                Title:
+              </label>
+              <input
+                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                placeholder="Task Title"
+                type="text"
+                id="title"
+                name="title"
+                defaultValue={editTaskData.title}
+                required
+              />
+
+              <label className="block mb-2  font-medium text-gray-900" htmlFor="description">Description:</label>
+              <textarea
+                id="description" placeholder="Task Description" className="bg-gray-50  border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  px-2 leading-tight  border py-2"
+                name="description"
+                defaultValue={editTaskData.description}
+                required
+              />
+
+              <label className="block mb-2  font-medium text-gray-900" htmlFor="deadline">Deadline:</label>
+              <input className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  block w-full p-2.5" type="date" id="deadline" name="deadline" defaultValue={editTaskData.deadline} required />
+
+              <label className="block mb-2  font-medium text-gray-900" htmlFor="priority">Priority:</label>
+              <select className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" id="priority" name="priority" required>
+              <option defaultValue={editTaskData.priority}>{editTaskData.priority}</option>
+                {editTaskData.priority !== "Low" && <option value="Low">Low</option>}
+                {editTaskData.priority !== "Moderate" && <option value="Moderate">Moderate</option>}
+                {editTaskData.priority !== "High" && <option value="High">High</option>}
+              </select>
+
+              <span className="justify-center gap-3 lg:gap-4 flex shadow-sm items-center">
+                <button type="button"
+                  onClick={() =>{
+                    seteditTaskData({});
+                    openTaskModal(!taskModal);
+                  }}
+                  className="inline-block px-5 py-3 mt-3 font-semibold leading-none text-blue-500 border border-blue-500 rounded-lg hover:text-blue-700 hover:border-blue-700"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="inline-block px-5 py-3 mt-3 font-semibold leading-none text-gray-100 bg-blue-600 hover:bg-blue-500 border border-gray-100 rounded-lg"
+                >
+                  Cofirm
+                </button>
+              </span>
+            </form>
+          </div>
+        </div>
+      </div>
+
+
       <ToastContainer position="top-center" autoClose={3000} />
     </div>
   );
